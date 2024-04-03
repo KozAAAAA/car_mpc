@@ -13,6 +13,8 @@ class CarVis:
     WHEEL_SIZE = (CAR_SIZE[0] // 4, CAR_SIZE[1] // 4)
     WHEEL_OFFSET = WHEEL_SIZE[0] * 1
 
+    L = CAR_SIZE[0] - WHEEL_OFFSET * 2
+
     def __init__(self, setpoint, t_step, window_size):
         self._setpoint_pos = setpoint
         self._t_step = t_step
@@ -49,7 +51,7 @@ class CarVis:
             self._wheel,
             self._wheel.get_rect(center=(CarVis.WHEEL_OFFSET, CarVis.CAR_SIZE[1] // 2)),
         )
-        rotated_wheel = pygame.transform.rotate(self._wheel, delta_deg)
+        rotated_wheel = pygame.transform.rotate(self._wheel, -delta_deg)
         self._car.blit(
             rotated_wheel,
             rotated_wheel.get_rect(
@@ -77,23 +79,3 @@ class CarVis:
         rotated_offset = offset.rotate(angle)
         rect = rotated_image.get_rect(center=pivot + rotated_offset)
         return rotated_image, rect
-
-
-def main():
-    x_pos = 250
-    y_pos = 250
-    theta = 0
-    delta = 10
-    setpoint = [500, 10, 0]
-
-    car = CarVis(setpoint, 1, (1000, 1000))
-    for i in range(10000):
-        x_pos += 0.1
-        y_pos += 0.1
-        theta += 0.01
-        delta += 0.01
-        car.make_step([x_pos, y_pos, theta, delta])
-
-
-if __name__ == "__main__":
-    main()
