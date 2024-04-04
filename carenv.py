@@ -66,7 +66,7 @@ class Car(pygame.sprite.Sprite):
 
     def _rotate(self):
         """Rotate the image of the sprite around a pivot point."""
-        self.image = pygame.transform.rotozoom(self.image, -self.theta, 1)
+        self.image = pygame.transform.rotozoom(self.image, 90-self.theta, 1)
         offset_rotated = self.offset.rotate(self.theta)
         self.rect = self.image.get_rect(center=self.pos + offset_rotated)
 
@@ -102,7 +102,7 @@ class Setpoint(pygame.sprite.Sprite):
         pygame.draw.circle(self.image,Setpoint.DOT_AND_LINE_COLOR ,(self.width // 2, self.height // 2) , self.dot_size)
         pygame.draw.line(self.image, Setpoint.DOT_AND_LINE_COLOR, (0, 0), (self.width, 0), 5)
         
-        self.image = pygame.transform.rotate(self.image, -self.theta)
+        self.image = pygame.transform.rotate(self.image, 90-self.theta)
 
         self.rect = self.image.get_rect(center=self.pos)
 
@@ -110,15 +110,20 @@ class CarEnv:
     
     ENVIROMENT_COLOR = (255, 255, 255)
 
-    def __init__(self, L, setpoint :np.ndarray, env_size, fps = 60):
+    def __init__(self, L, setpoint :np.ndarray, env_size):
+        pygame.init()
+        
         setpoint[2] = np.rad2deg(setpoint[2])
         
         self.car = Car(L)
         self.setpoint = Setpoint(self.car.width, self.car.wheel_offset, self.car.dot_size, *setpoint)
-        pygame.init()
         self.screen = pygame.display.set_mode(env_size)
-        self.clock = pygame.time.Clock()
-        self.fps = fps
+
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
 
     def step(self, x: np.ndarray):
         try:
@@ -130,7 +135,6 @@ class CarEnv:
             self.screen.blit(self.car.image, self.car.rect)
             self.screen.blit(self.setpoint.image, self.setpoint.rect)
             pygame.display.update()
-            self.clock.tick(self.fps)
 
         except KeyboardInterrupt:
             self.close()
