@@ -110,14 +110,17 @@ class CarEnv:
     
     ENVIROMENT_COLOR = (255, 255, 255)
 
-    def __init__(self, L, setpoint :np.ndarray, env_size):
+    def __init__(self, L, setpoint :np.ndarray, env_size, t_step):
         pygame.init()
         
         setpoint[2] = np.rad2deg(setpoint[2])
         
+        self.t_step = t_step
+
         self.car = Car(L)
         self.setpoint = Setpoint(self.car.width, self.car.wheel_offset, self.car.dot_size, *setpoint)
         self.screen = pygame.display.set_mode(env_size)
+        self.clock = pygame.time.Clock()
 
     def __enter__(self):
         return self
@@ -127,6 +130,8 @@ class CarEnv:
 
     def step(self, x: np.ndarray):
         try:
+            self.clock.tick(1/self.t_step)
+
             x[2] = np.rad2deg(x[2])
             x[3] = np.rad2deg(x[3])
 
