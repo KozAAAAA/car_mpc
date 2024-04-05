@@ -27,7 +27,7 @@ class Car(pygame.sprite.Sprite):
 
         self.L = L
 
-        self.offset = pygame.Vector2((0, self.L // 2))
+        self.offset = pygame.Vector2((self.L // 2, 0))
         self.pos = pygame.Vector2((0, 0))
         self.theta = 0
         self.delta = 0
