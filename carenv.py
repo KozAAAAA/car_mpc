@@ -1,9 +1,12 @@
 """Module for visualizing the car and the setpoint."""
 
 import sys
+import os
 
 import pygame
 import numpy as np
+from PIL import Image
+from IPython.display import display
 
 
 class Car(pygame.sprite.Sprite):
@@ -143,13 +146,12 @@ class CarEnv:
         setpoint: np.ndarray,
         env_size: tuple,
         t_step: float,
+        notebook: bool = False,
     ):
         """Initialize the environment."""
-
         self.t_step = t_step
-
+        self.notebook = notebook
         x, y, theta, _ = setpoint
-
         self.car = Car(L=L)
         self.setpoint = Setpoint(
             car_width=self.car.width,
@@ -159,6 +161,10 @@ class CarEnv:
             y=y,
             theta=np.rad2deg(theta),
         )
+        if self.notebook:
+            os.environ["SDL_VIDEODRIVER"] = "dummy"
+        else:
+            os.environ["SDL_VIDEODRIVER"] = "x11"
 
         pygame.init()
         self.screen = pygame.display.set_mode(env_size)
@@ -181,10 +187,14 @@ class CarEnv:
             pygame.display.update()
             self.clock.tick(1 / self.t_step)
 
+            if self.notebook:
+                view = pygame.surfarray.array3d(self.screen).transpose(1, 0, 2)
+                display(Image.fromarray(view), clear=True)
+
+
         except KeyboardInterrupt:
             self.close()
 
     def close(self):
         """Close the visualization window."""
         pygame.quit()
-        sys.exit()
