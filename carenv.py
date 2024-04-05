@@ -138,7 +138,7 @@ class Setpoint(pygame.sprite.Sprite):
 class CarEnv:
     """Environment for visualizing the car and the setpoint."""
 
-    ENVIROMENT_COLOR = (250, 250, 250)
+    ENVIROMENT_COLOR = (245, 245, 245)
 
     def __init__(
         self,
