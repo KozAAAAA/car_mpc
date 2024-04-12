@@ -1,6 +1,5 @@
 """Module for visualizing the car and the setpoint."""
 
-import sys
 import os
 
 import pygame
