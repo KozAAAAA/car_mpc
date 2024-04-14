@@ -34,24 +34,24 @@ class Car(pygame.sprite.Sprite):
         self.theta = 0
         self.delta = 0
 
-        self.wheel_offset = int(Car.WHEEL_OFFSET_MULTIPLIER * self.L)
-        self.width = int(Car.WIDTH_MULTIPLIER * self.L)
+        self.wheel_offset = int(self.WHEEL_OFFSET_MULTIPLIER * self.L)
+        self.width = int(self.WIDTH_MULTIPLIER * self.L)
         self.height = int(self.wheel_offset * 2 + self.L)
-        self.wheel_width = int(Car.WHEEL_WIDTH_MULTIPLIER * self.L)
-        self.wheel_height = int(Car.WHEEL_HEIGHT_MULTIPLIER * self.L)
-        self.dot_size = int(Car.DOT_MULTIPLIER * self.wheel_width)
+        self.wheel_width = int(self.WHEEL_WIDTH_MULTIPLIER * self.L)
+        self.wheel_height = int(self.WHEEL_HEIGHT_MULTIPLIER * self.L)
+        self.dot_size = int(self.DOT_MULTIPLIER * self.wheel_width)
 
         self.base_image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         self.wheel = pygame.Surface(
             (self.wheel_width, self.wheel_height), pygame.SRCALPHA
         )
 
-        self.base_image.fill(Car.CAR_COLOR)
-        self.wheel.fill(Car.WHEEL_COLOR)
+        self.base_image.fill(self.CAR_COLOR)
+        self.wheel.fill(self.WHEEL_COLOR)
 
         pygame.draw.circle(
             self.wheel,
-            Car.DOT_COLOR,
+            self.DOT_COLOR,
             (self.wheel_width // 2, self.wheel_height // 2),
             self.dot_size,
         )
@@ -119,15 +119,15 @@ class Setpoint(pygame.sprite.Sprite):
         self.theta = theta
 
         self.image = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        self.image.fill(Setpoint.BACKGROUND_COLOR)
+        self.image.fill(self.BACKGROUND_COLOR)
         pygame.draw.circle(
             self.image,
-            Setpoint.DOT_AND_LINE_COLOR,
+            self.DOT_AND_LINE_COLOR,
             (self.width // 2, self.height // 2),
             self.dot_size,
         )
         pygame.draw.line(
-            self.image, Setpoint.DOT_AND_LINE_COLOR, (0, 0), (self.width, 0), 5
+            self.image, self.DOT_AND_LINE_COLOR, (0, 0), (self.width, 0), 5
         )
 
         self.image = pygame.transform.rotate(self.image, 90 - self.theta)
@@ -179,7 +179,7 @@ class CarEnv:
         """Perform a single step of visualization."""
         try:
             x, y, theta, delta = x0
-            self.screen.fill(CarEnv.ENVIROMENT_COLOR)
+            self.screen.fill(self.ENVIROMENT_COLOR)
             self.car.update(x, y, np.rad2deg(theta), np.rad2deg(delta))
             self.screen.blit(self.car.image, self.car.rect)
             self.screen.blit(self.setpoint.image, self.setpoint.rect)
